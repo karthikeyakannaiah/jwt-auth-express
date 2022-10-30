@@ -40,26 +40,6 @@ app.post('/users',async (req,res)=>{
         res.status(500).send()
     }
 })
-app.post('/users/login', async (req,res)=>{
-    const user = users.find(user => user.name === req.body.name)
-    if (user == null){
-        req.status(400).send("cannot find user")
-    }
-    try {
-        if(await bcrypt.compare(req.body.password, user.password)){
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-
-            res.send({accessToken:accessToken})
-        }else{
-            res.send("not allowed")
-        }
-    }
-    catch(err){
-        console.log(err)
-        res.status(500).send()
-    }
-})
-
 
 app.get('/posts',authenticateToken,(req,res)=>{
     res.json(posts.filter(post => post.username === req.user.name))
